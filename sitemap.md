@@ -1,0 +1,14 @@
+/
+ /shop
+ /products/[slug]
+ /ingredients
+ /ingredients/[slug]
+ /articles
+ /articles/[slug]
+ /ai-guide
+ /about
+ /faq
+ /contact
+ /privacy
+ /terms
+ /disclaimer

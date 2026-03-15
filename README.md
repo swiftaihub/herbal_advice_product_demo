@@ -157,3 +157,11 @@ NEXT_PUBLIC_SITE_URL=https://swiftaihub.com/product-page/herbal_tea_demo
 ```
 
 If unset, the app falls back to `https://example.com`.
+
+For LAN device testing in development, you can optionally allow extra dev origins:
+
+```bash
+NEXT_ALLOWED_DEV_ORIGINS=192.168.1.179,my-dev-host.local
+```
+
+The app already auto-allows `localhost`, `127.0.0.1`, and the machine's detected local IPv4 addresses.

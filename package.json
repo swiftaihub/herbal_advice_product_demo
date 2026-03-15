@@ -1,0 +1,34 @@
+{
+  "name": "herbal-advice-product-demo",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "gray-matter": "^4.0.3",
+    "lucide-react": "^0.577.0",
+    "next": "^16.1.6",
+    "next-mdx-remote": "^6.0.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "remark-gfm": "^4.0.1",
+    "server-only": "^0.0.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@tailwindcss/postcss": "^4.2.1",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.2",
+    "eslint": "^9.39.1",
+    "eslint-config-next": "^16.1.6",
+    "tailwindcss": "^4.2.1",
+    "typescript": "^5.9.3"
+  }
+}

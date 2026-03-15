@@ -4,6 +4,7 @@ import { useDeferredValue, useState } from "react";
 
 import { ProductCard } from "@/components/cards/product-card";
 import { Button } from "@/components/ui/button";
+import { FilterSelect } from "@/components/ui/filter-select";
 import { Input } from "@/components/ui/input";
 import { getBenefitLabel, getConstitutionLabel, getDiscomfortLabel } from "@/lib/taxonomies";
 import type { Locale, Product } from "@/lib/types";
@@ -46,6 +47,10 @@ export function ProductExplorer({
   const [selectedDiscomfort, setSelectedDiscomfort] = useState<string | null>(null);
   const [sort, setSort] = useState<SortOption>("featured");
   const deferredQuery = useDeferredValue(query);
+  const allConstitutionsLabel =
+    locale === "zh"
+      ? `全部${copy.constitutionsLabel}`
+      : `All ${copy.constitutionsLabel.toLowerCase()}`;
 
   const filteredProducts = [...products]
     .filter((product) => {
@@ -79,7 +84,7 @@ export function ProductExplorer({
 
   return (
     <div className="grid gap-10 lg:h-[calc(100vh-8rem)] lg:grid-cols-[minmax(18rem,0.34fr)_minmax(0,0.66fr)] lg:items-start lg:overflow-hidden">
-      <aside className="space-y-6 rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/75 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.04)] lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
+      <aside className="scrollbar-premium space-y-6 rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/75 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.04)] lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             {copy.searchLabel}
@@ -118,12 +123,16 @@ export function ProductExplorer({
           onSelect={setSelectedBenefit}
           renderLabel={(value) => getBenefitLabel(value, locale)}
         />
-        <FilterGroup
+        <FilterSelect
           label={copy.constitutionsLabel}
-          items={constitutions}
-          selected={selectedConstitution}
-          onSelect={setSelectedConstitution}
-          renderLabel={(value) => getConstitutionLabel(value, locale)}
+          value={selectedConstitution}
+          onChange={setSelectedConstitution}
+          placeholder={copy.constitutionsLabel}
+          clearLabel={allConstitutionsLabel}
+          options={constitutions.map((value) => ({
+            value,
+            label: getConstitutionLabel(value, locale),
+          }))}
         />
         <FilterGroup
           label={copy.discomfortsLabel}
@@ -147,7 +156,7 @@ export function ProductExplorer({
           {copy.resetFilters}
         </Button>
       </aside>
-      <div className="lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
+      <div className="scrollbar-premium lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
         {filteredProducts.length === 0 ? (
           <div className="rounded-[2rem] border border-dashed border-[rgba(111,89,64,0.22)] bg-white/55 px-8 py-14 text-center text-[var(--color-muted)]">
             {copy.noResults}

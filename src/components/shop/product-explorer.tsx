@@ -6,7 +6,11 @@ import { ProductCard } from "@/components/cards/product-card";
 import { Button } from "@/components/ui/button";
 import { FilterSelect } from "@/components/ui/filter-select";
 import { Input } from "@/components/ui/input";
-import { getBenefitLabel, getConstitutionLabel, getDiscomfortLabel } from "@/lib/taxonomies";
+import {
+  getBenefitLabel,
+  getConstitutionLabel,
+  getDiscomfortLabel,
+} from "@/lib/taxonomies";
 import type { Locale, Product } from "@/lib/types";
 
 type SortOption = "featured" | "price-low" | "price-high";
@@ -43,8 +47,12 @@ export function ProductExplorer({
 }: ProductExplorerProps) {
   const [query, setQuery] = useState("");
   const [selectedBenefit, setSelectedBenefit] = useState<string | null>(null);
-  const [selectedConstitution, setSelectedConstitution] = useState<string | null>(null);
-  const [selectedDiscomfort, setSelectedDiscomfort] = useState<string | null>(null);
+  const [selectedConstitution, setSelectedConstitution] = useState<string | null>(
+    null,
+  );
+  const [selectedDiscomfort, setSelectedDiscomfort] = useState<string | null>(
+    null,
+  );
   const [sort, setSort] = useState<SortOption>("featured");
   const deferredQuery = useDeferredValue(query);
   const allConstitutionsLabel =
@@ -55,8 +63,7 @@ export function ProductExplorer({
   const filteredProducts = [...products]
     .filter((product) => {
       const text =
-        `${product.name.en} ${product.name.zh} ${product.tagline.en} ${product.tagline.zh}`
-          .toLowerCase();
+        `${product.name.en} ${product.name.zh} ${product.tagline.en} ${product.tagline.zh}`.toLowerCase();
       const queryMatches = text.includes(deferredQuery.toLowerCase());
       const benefitMatches = selectedBenefit
         ? product.benefit_tags.includes(selectedBenefit)
@@ -68,7 +75,9 @@ export function ProductExplorer({
         ? product.recent_discomforts.includes(selectedDiscomfort)
         : true;
 
-      return queryMatches && benefitMatches && constitutionMatches && discomfortMatches;
+      return (
+        queryMatches && benefitMatches && constitutionMatches && discomfortMatches
+      );
     })
     .sort((a, b) => {
       if (sort === "price-low") {

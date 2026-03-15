@@ -201,6 +201,13 @@ cython_debug/
 .cursorignore
 .cursorindexingignore
 
+# Node / Next.js
+node_modules/
+.next/
+out/
+npm-debug.log*
+package-lock.json.tmp
+
 # Marimo
 marimo/_static/
 marimo/_lsp/

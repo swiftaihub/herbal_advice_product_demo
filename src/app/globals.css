@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+:root {
+  --color-paper: #f8f3eb;
+  --color-surface: #efe4d2;
+  --color-surface-strong: #e2d1b7;
+  --color-ink: #2e261d;
+  --color-ink-soft: #41372d;
+  --color-copy: #5a4d42;
+  --color-muted: #7a6a5b;
+  --color-accent: #b0884a;
+  --color-sun: #ddb96f;
+  --color-line: rgba(103, 84, 60, 0.14);
+  --color-danger: #9b3a2d;
+  --color-success: #466c53;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top left, rgba(176, 136, 74, 0.12), transparent 34%),
+    radial-gradient(circle at right 20%, rgba(167, 188, 146, 0.16), transparent 24%),
+    linear-gradient(180deg, #f8f3eb 0%, #fbf8f2 55%, #efe4d6 100%);
+  color: var(--color-copy);
+  font-family: var(--font-body-en), var(--font-body-zh), sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.16) 1px, transparent 1px);
+  background-size: 64px 64px;
+  mask-image: radial-gradient(circle at center, black 42%, transparent 82%);
+  opacity: 0.22;
+  content: "";
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img {
+  color: transparent;
+}
+
+::selection {
+  background: rgba(176, 136, 74, 0.2);
+}
+
+.font-display {
+  font-family: var(--font-display-en), var(--font-display-zh), serif;
+  letter-spacing: -0.03em;
+}
+
+.page-section {
+  position: relative;
+  padding-inline: 1rem;
+}
+
+@media (min-width: 640px) {
+  .page-section {
+    padding-inline: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-section {
+    padding-inline: 2rem;
+  }
+}
+
+.article-prose > :first-child {
+  margin-top: 0;
+}
+
+.article-prose hr {
+  margin-top: 2.5rem;
+  border-color: var(--color-line);
+}

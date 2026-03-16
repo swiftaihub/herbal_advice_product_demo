@@ -16,12 +16,14 @@ export function buildMetadata({
   title,
   description,
   image = socialPreviewImage,
+  noIndex = false,
 }: {
   locale: Locale;
   pathname: string;
   title?: string;
   description?: string;
   image?: string;
+  noIndex?: boolean;
 }): Metadata {
   const pageTitle = title ? `${title} | ${brandName[locale]}` : brandName[locale];
   const pageDescription = description ?? brandDescription[locale];
@@ -64,5 +66,11 @@ export function buildMetadata({
       description: pageDescription,
       images: [absoluteUrl(image)],
     },
+    robots: noIndex
+      ? {
+          follow: false,
+          index: false,
+        }
+      : undefined,
   };
 }

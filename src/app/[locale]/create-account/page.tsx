@@ -21,6 +21,7 @@ export async function generateMetadata({
     pathname: "/create-account",
     title: copy.navigation.createAccount,
     description: copy.auth.createBody,
+    noIndex: true,
   });
 }
 

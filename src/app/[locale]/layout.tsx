@@ -12,6 +12,9 @@ import { brandName, newsletterPlaceholderTitle } from "@/lib/site";
 import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
 
+export const dynamic = "error";
+export const dynamicParams = false;
+
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }

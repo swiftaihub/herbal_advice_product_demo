@@ -21,6 +21,7 @@ export async function generateMetadata({
     pathname: "/sign-in",
     title: copy.navigation.signIn,
     description: copy.auth.signInBody,
+    noIndex: true,
   });
 }
 

@@ -16,6 +16,8 @@ import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
 import { absoluteUrl, formatDate } from "@/lib/utils";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const articles = await getAllArticleMeta();
 

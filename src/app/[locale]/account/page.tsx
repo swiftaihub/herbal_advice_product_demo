@@ -21,6 +21,7 @@ export async function generateMetadata({
     pathname: "/account",
     title: copy.navigation.account,
     description: copy.auth.accountBody,
+    noIndex: true,
   });
 }
 

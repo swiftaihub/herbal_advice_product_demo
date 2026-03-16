@@ -16,10 +16,16 @@ export function LocaleLink({
   locale,
   className,
   children,
+  prefetch = false,
   ...props
 }: LocaleLinkProps) {
   return (
-    <Link href={withLocale(href, locale)} className={className} {...props}>
+    <Link
+      href={withLocale(href, locale)}
+      className={className}
+      prefetch={prefetch}
+      {...props}
+    >
       {children}
     </Link>
   );

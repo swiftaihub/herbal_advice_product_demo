@@ -193,6 +193,7 @@ export function CartDrawer({ locale, copy }: CartDrawerProps) {
               <div className="grid gap-3 sm:grid-cols-2">
                 <Link
                   href={withLocale("/checkout", locale)}
+                  prefetch={false}
                   onClick={closeDrawer}
                   className={buttonStyles({ className: "w-full" })}
                 >
@@ -200,6 +201,7 @@ export function CartDrawer({ locale, copy }: CartDrawerProps) {
                 </Link>
                 <Link
                   href={withLocale("/cart", locale)}
+                  prefetch={false}
                   onClick={closeDrawer}
                   className={buttonStyles({
                     variant: "secondary",

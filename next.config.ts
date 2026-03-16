@@ -54,8 +54,9 @@ const allowedDevOrigins = getLocalDevOrigins();
 const nextConfig: NextConfig = {
   allowedDevOrigins,
   basePath,
+  poweredByHeader: false,
   images: {
-    formats: ["image/avif", "image/webp"],
+    unoptimized: true,
   },
 };
 

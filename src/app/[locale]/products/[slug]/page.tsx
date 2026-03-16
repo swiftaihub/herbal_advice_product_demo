@@ -26,6 +26,8 @@ import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
 import { absoluteUrl, formatCurrency } from "@/lib/utils";
 
+export const dynamicParams = false;
+
 export async function generateStaticParams() {
   const products = await getActiveProducts();
 

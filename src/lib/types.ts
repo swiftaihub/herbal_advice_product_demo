@@ -56,7 +56,7 @@ export interface ArticleMeta {
 }
 
 export interface Article extends ArticleMeta {
-  body: React.ReactNode;
+  bodyHtml: string;
   readingMinutes: number;
 }
 

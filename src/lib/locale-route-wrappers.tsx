@@ -93,3 +93,27 @@ export function wrapLocaleStaticParams<T extends RouteParams>(
     });
   };
 }
+
+export function wrapFixedLocalePage<T extends RouteParams>(
+  locale: Locale,
+  fixedParams: T,
+  Page: LocalePageComponent<T>,
+) {
+  return function WrappedFixedLocalePage() {
+    return Page({
+      params: injectLocale(locale, fixedParams),
+    });
+  };
+}
+
+export function wrapFixedLocaleMetadata<T extends RouteParams>(
+  locale: Locale,
+  fixedParams: T,
+  generateMetadata: LocaleMetadataFactory<T>,
+) {
+  return function WrappedFixedLocaleMetadata() {
+    return generateMetadata({
+      params: injectLocale(locale, fixedParams),
+    });
+  };
+}

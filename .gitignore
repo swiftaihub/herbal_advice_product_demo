@@ -214,3 +214,7 @@ package-lock.json.tmp
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# OpenNext
+.open-next
+.dev.vars*

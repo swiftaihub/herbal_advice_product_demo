@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 import { defaultLocale, isLocale, localeCookieName } from "@/i18n/config";
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const basePath = request.nextUrl.basePath || "";
   const pathname = request.nextUrl.pathname.startsWith(basePath)
     ? request.nextUrl.pathname.slice(basePath.length) || "/"

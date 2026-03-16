@@ -46,6 +46,7 @@ export function CartPageView({
         </p>
         <Link
           href={withLocale("/shop", locale)}
+          prefetch={false}
           className={buttonStyles({ className: "mt-8" })}
         >
           {copy.continueShopping}
@@ -164,12 +165,14 @@ export function CartPageView({
           )}
           <Link
             href={withLocale("/checkout", locale)}
+            prefetch={false}
             className={buttonStyles({ className: "w-full" })}
           >
             {copy.checkout}
           </Link>
           <Link
             href={withLocale("/shop", locale)}
+            prefetch={false}
             className={buttonStyles({
               variant: "secondary",
               className: "w-full",

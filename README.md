@@ -1,6 +1,6 @@
 # Herbal Atelier Frontend
 
-Production-ready standalone bilingual herbal wellness tea storefront built with Next.js App Router, TypeScript, Tailwind CSS, and MDX.
+Production-ready standalone bilingual herbal wellness tea storefront built with Next.js App Router, TypeScript, Tailwind CSS, and build-time generated article content.
 
 ## What is included
 
@@ -32,7 +32,7 @@ The site is built around these repo files:
 - TypeScript
 - Tailwind CSS `4`
 - App Router
-- `next-mdx-remote` for article rendering
+- Build-time article generation for static HTML output
 
 ## Run locally
 
@@ -71,7 +71,7 @@ npm run build
 - `/[locale]/forgot-password`
 - `/[locale]/account`
 
-Routes without a locale prefix are redirected through `src/proxy.ts`.
+The unprefixed root route is a static locale chooser. Canonical public pages live under locale-prefixed routes only.
 
 ## Architecture
 
@@ -84,7 +84,7 @@ Routes without a locale prefix are redirected through `src/proxy.ts`.
 - `src/i18n/`
   Locale config and UI dictionaries
 - `content/articles/`
-  File-based bilingual article content
+  File-based bilingual article content compiled into static records at build time
 
 ## Adding products or ingredients
 
@@ -139,6 +139,11 @@ Example shape:
 ```
 
 No code changes are required when adding a correctly structured article folder.
+`npm run build` runs `scripts/generate-article-records.mjs` first, so Cloudflare deploys fully bundled article HTML instead of compiling MDX at runtime.
+
+## Cloudflare deployment
+
+Cloudflare-specific deployment and production hardening notes live in `docs/cloudflare-hardening.md`.
 
 ## Helper AI integration
 

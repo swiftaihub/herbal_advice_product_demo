@@ -15,7 +15,7 @@ export default function NotFound() {
         <p className="mt-4 text-base leading-8 text-[var(--color-muted)]">
           The page you’re looking for may have moved or doesn’t exist yet.
         </p>
-        <Link href="/en" className={buttonStyles({ className: "mt-8" })}>
+        <Link href="/en" prefetch={false} className={buttonStyles({ className: "mt-8" })}>
           Return home
         </Link>
       </div>

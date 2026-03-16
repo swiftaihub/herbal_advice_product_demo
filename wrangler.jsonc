@@ -3,24 +3,26 @@
 	"main": ".open-next/worker.js",
 	"name": "herbal-advice-product-page",
 	"compatibility_date": "2026-03-16",
+	"workers_dev": true,
+	"preview_urls": true,
 	"compatibility_flags": [
 		"nodejs_compat",
 		"global_fetch_strictly_public"
 	],
 	"observability": {
-		"enabled": false,
-		"head_sampling_rate": 1,
-		"logs": {
 		"enabled": true,
 		"head_sampling_rate": 1,
-		"persist": true,
-		"invocation_logs": true
+		"logs": {
+			"enabled": true,
+			"head_sampling_rate": 1,
+			"persist": true,
+			"invocation_logs": true
 		},
 		"traces": {
-		"enabled": false,
-		"persist": true,
-		"head_sampling_rate": 1
-			}
+			"enabled": false,
+			"persist": true,
+			"head_sampling_rate": 1
+		}
 	},
 	"assets": {
 		"directory": ".open-next/assets",
@@ -35,14 +37,13 @@
 		}
 	],
 	"images": {
-		// Enable image optimization
-		// see https://opennext.js.org/cloudflare/howtos/image
+		// Retained for future opt-in image workflows. The app currently serves images statically.
 		"binding": "IMAGES"
 	},
-  "routes": [
-    {
-      "pattern": "tea.swiftaihub.com",
-      "custom_domain": true
-    }
-  ]
+	"routes": [
+		{
+			"pattern": "tea.swiftaihub.com",
+			"custom_domain": true
+		}
+	]
 }

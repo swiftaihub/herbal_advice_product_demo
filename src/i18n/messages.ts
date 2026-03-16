@@ -192,8 +192,16 @@ export const messages = {
       formEmail: "Email address",
       formMessage: "How can we help?",
       formSubmit: "Send inquiry",
-      successPlaceholder:
-        "Frontend placeholder submitted. Connect this form to your CRM or support backend to activate live messaging.",
+      formPending: "Sending securely...",
+      successMessage:
+        "Protected intake accepted your note. Connect CRM or email delivery later to complete the live support workflow.",
+      errorGeneric: "We couldn't submit your note. Please try again in a moment.",
+      rateLimited: "You're sending too quickly. Please wait before trying again.",
+      validationRequired: "Please complete your name, email, and message.",
+      validationEmail: "Enter a valid email address.",
+      validationMessageLength: "Keep your note under 1,500 characters.",
+      botField: "If you are human, leave this field empty.",
+      cooldownLabel: "Retry in",
     },
     legal: {
       privacy: "Privacy policy",

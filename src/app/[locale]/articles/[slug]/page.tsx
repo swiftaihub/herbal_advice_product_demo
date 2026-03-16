@@ -129,9 +129,8 @@ export default async function ArticleDetailPage({
                     ? "var(--font-display-en), var(--font-display-zh), serif"
                     : "var(--font-body-en), var(--font-body-zh), sans-serif",
               }}
-            >
-              {article.body}
-            </article>
+              dangerouslySetInnerHTML={{ __html: article.bodyHtml }}
+            />
           </div>
 
           {relatedProducts.length > 0 ? (

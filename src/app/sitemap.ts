@@ -6,6 +6,8 @@ import { getAllIngredients } from "@/lib/data/ingredients";
 import { getActiveProducts } from "@/lib/data/products";
 import { absoluteUrl } from "@/lib/utils";
 
+export const dynamic = "force-static";
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, ingredients, articles] = await Promise.all([
     getActiveProducts(),
@@ -14,7 +16,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]);
 
   const staticRoutes = [
-    "/",
     "/shop",
     "/ingredients",
     "/articles",
@@ -25,12 +26,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     "/privacy",
     "/terms",
     "/disclaimer",
-    "/cart",
-    "/checkout",
-    "/sign-in",
-    "/create-account",
-    "/forgot-password",
-    "/account",
+    "/",
   ];
 
   const localizedStatic = locales.flatMap((locale) =>

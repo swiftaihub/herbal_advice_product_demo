@@ -22,6 +22,7 @@ export function LanguageToggle({
   return (
     <Link
       href={nextHref}
+      prefetch={false}
       className={cn(
         "inline-flex h-11 items-center rounded-full border border-[var(--color-line)] bg-white/80 px-4 text-xs font-semibold tracking-[0.16em] text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white",
       )}

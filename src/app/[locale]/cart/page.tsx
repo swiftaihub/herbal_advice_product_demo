@@ -20,6 +20,7 @@ export async function generateMetadata({
     pathname: "/cart",
     title: copy.navigation.cart,
     description: copy.cart.checkoutNote,
+    noIndex: true,
   });
 }
 

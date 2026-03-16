@@ -21,6 +21,7 @@ export async function generateMetadata({
     pathname: "/forgot-password",
     title: copy.navigation.forgotPassword,
     description: copy.auth.forgotBody,
+    noIndex: true,
   });
 }
 

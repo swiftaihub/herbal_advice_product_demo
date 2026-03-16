@@ -59,7 +59,11 @@ export function SiteHeader({
     <header className="sticky top-0 z-50 border-b border-[rgba(111,89,64,0.08)] bg-[rgba(250,245,238,0.78)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-5">
-          <Link href={withLocale("/", locale)} className="flex items-center gap-3">
+          <Link
+            href={withLocale("/", locale)}
+            prefetch={false}
+            className="flex items-center gap-3"
+          >
             <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[rgba(176,136,74,0.18)] bg-white/80">
               <Image
                 src="/images/brand/logo-mark.png"
@@ -89,6 +93,7 @@ export function SiteHeader({
                 <Link
                   key={item.href}
                   href={withLocale(item.href, locale)}
+                  prefetch={false}
                   onClick={() => setIsMenuOpen(false)}
                   className={cn(
                     "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition",
@@ -110,6 +115,7 @@ export function SiteHeader({
           </div>
           <Link
             href={withLocale("/sign-in", locale)}
+            prefetch={false}
             className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white"
             aria-label={accountLabel}
           >
@@ -154,6 +160,7 @@ export function SiteHeader({
               <Link
                 key={item.href}
                 href={withLocale(item.href, locale)}
+                prefetch={false}
                 onClick={() => setIsMenuOpen(false)}
                 className="flex items-center justify-between rounded-2xl border border-transparent bg-white/65 px-4 py-3 text-sm font-medium text-[var(--color-ink)] transition hover:border-[var(--color-line)]"
               >

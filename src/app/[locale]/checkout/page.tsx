@@ -23,6 +23,7 @@ export async function generateMetadata({
       typedLocale === "zh"
         ? "前端占位式结账流程，便于后续接入真实支付与配送服务。"
         : "A frontend-ready placeholder checkout surface for later payment and fulfillment integration.",
+    noIndex: true,
   });
 }
 

@@ -1,18 +1,12 @@
 import "server-only";
 
 import { cache } from "react";
-import { readFile } from "node:fs/promises";
-import path from "node:path";
 
+import productsData from "../../../products.json";
 import type { Product } from "@/lib/types";
 
-const productsPath = path.join(process.cwd(), "products.json");
-
 export const getAllProducts = cache(async () => {
-  const file = await readFile(productsPath, "utf8");
-  const products = JSON.parse(file) as Product[];
-
-  return products;
+  return productsData as Product[];
 });
 
 export async function getActiveProducts() {

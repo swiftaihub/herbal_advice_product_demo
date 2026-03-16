@@ -2,9 +2,8 @@ import "server-only";
 
 import { cache } from "react";
 
-import { articleRecords } from "@/lib/data/article-records";
+import { articleRecords } from "@/lib/data/article-records.generated";
 import type { Article, Locale } from "@/lib/types";
-import { readingMinutesFromText } from "@/lib/utils";
 
 export const getAllArticleMeta = cache(async () => {
   const articles = Object.values(articleRecords).map((record) => record.meta);
@@ -28,28 +27,10 @@ export async function getArticleBySlug(slug: string, locale: Locale) {
     return undefined;
   }
 
-  const { meta } = record;
-  const source = record.source[locale];
-  const [{ compileMDX }, { default: remarkGfm }, { mdxComponents }] = await Promise.all([
-    import("next-mdx-remote/rsc"),
-    import("remark-gfm"),
-    import("@/components/mdx/mdx-components"),
-  ]);
-  const compiled = await compileMDX({
-    source,
-    options: {
-      mdxOptions: {
-        remarkPlugins: [remarkGfm],
-      },
-      parseFrontmatter: false,
-    },
-    components: mdxComponents,
-  });
-
   const article: Article = {
-    ...meta,
-    body: compiled.content,
-    readingMinutes: readingMinutesFromText(source),
+    ...record.meta,
+    bodyHtml: record.bodyHtml[locale],
+    readingMinutes: record.readingMinutes[locale],
   };
 
   return article;

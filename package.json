@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "node scripts/generate-article-records.mjs",
+    "prebuild": "node scripts/generate-article-records.mjs && node scripts/generate-static-locale-routes.mjs",
     "build": "next build",
+    "predev": "node scripts/prepare-dev.mjs",
     "dev": "next dev",
     "start": "next start",
     "lint": "eslint .",

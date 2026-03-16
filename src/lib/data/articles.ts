@@ -2,10 +2,6 @@ import "server-only";
 
 import { cache } from "react";
 
-import { compileMDX } from "next-mdx-remote/rsc";
-import remarkGfm from "remark-gfm";
-
-import { mdxComponents } from "@/components/mdx/mdx-components";
 import { articleRecords } from "@/lib/data/article-records";
 import type { Article, Locale } from "@/lib/types";
 import { readingMinutesFromText } from "@/lib/utils";
@@ -34,6 +30,11 @@ export async function getArticleBySlug(slug: string, locale: Locale) {
 
   const { meta } = record;
   const source = record.source[locale];
+  const [{ compileMDX }, { default: remarkGfm }, { mdxComponents }] = await Promise.all([
+    import("next-mdx-remote/rsc"),
+    import("remark-gfm"),
+    import("@/components/mdx/mdx-components"),
+  ]);
   const compiled = await compileMDX({
     source,
     options: {

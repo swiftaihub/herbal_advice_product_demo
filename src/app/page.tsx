@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { buttonStyles } from "@/components/ui/button";
+import { withLocale } from "@/i18n/config";
 import { brandName, brandTagline } from "@/lib/site";
 
 export const dynamic = "force-static";
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
 
 export default function RootPage() {
   return (
-    <main className="flex min-h-screen items-center justify-center px-4 py-16">
+    <main className="relative z-[1] flex min-h-screen items-center justify-center px-4 py-16">
       <div className="w-full max-w-3xl rounded-[2.75rem] border border-[rgba(111,89,64,0.12)] bg-white/80 p-10 text-center shadow-[0_18px_50px_rgba(24,21,17,0.06)] md:p-14">
         <p className="text-xs font-semibold uppercase tracking-[0.26em] text-[var(--color-accent)]">
           Herbal Atelier
@@ -30,18 +31,36 @@ export default function RootPage() {
           public pages live under locale-prefixed routes only.
         </p>
         <div className="mt-10 grid gap-3 sm:grid-cols-2">
-          <Link href="/en" prefetch={false} className={buttonStyles({ className: "w-full" })}>
-            English
+          <Link
+            href={withLocale("/", "en")}
+            prefetch={false}
+            className="block"
+          >
+            <span
+              className={buttonStyles({
+                size: "lg",
+                className:
+                  "w-full text-base font-bold tracking-[0.02em] shadow-[0_18px_38px_rgba(24,21,17,0.22)]",
+              })}
+              style={{ color: "#ffffff" }}
+            >
+              English
+            </span>
           </Link>
           <Link
-            href="/zh"
+            href={withLocale("/", "zh")}
             prefetch={false}
-            className={buttonStyles({
-              variant: "secondary",
-              className: "w-full",
-            })}
+            className="block"
           >
-            中文
+            <span
+              className={buttonStyles({
+                variant: "secondary",
+                size: "lg",
+                className: "w-full text-base font-semibold tracking-[0.02em]",
+              })}
+            >
+              中文
+            </span>
           </Link>
         </div>
       </div>

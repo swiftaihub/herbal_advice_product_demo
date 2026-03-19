@@ -10,6 +10,14 @@ import {
 import type { Locale } from "@/lib/types";
 import { absoluteUrl } from "@/lib/utils";
 
+function toMetadataUrl(url: string) {
+  if (url.startsWith("/")) {
+    return absoluteUrl(url);
+  }
+
+  return url;
+}
+
 export function buildMetadata({
   locale,
   pathname,
@@ -17,6 +25,8 @@ export function buildMetadata({
   description,
   image = socialPreviewImage,
   noIndex = false,
+  canonicalUrl,
+  languageAlternates,
 }: {
   locale: Locale;
   pathname: string;
@@ -24,30 +34,43 @@ export function buildMetadata({
   description?: string;
   image?: string;
   noIndex?: boolean;
+  canonicalUrl?: string;
+  languageAlternates?: Partial<Record<Locale, string>>;
 }): Metadata {
   const pageTitle = title ? `${title} | ${brandName[locale]}` : brandName[locale];
   const pageDescription = description ?? brandDescription[locale];
-  const currentPath = withLocale(pathname, locale);
-
-  const languages = Object.fromEntries(
-    locales.map((supportedLocale) => [
-      supportedLocale,
-      absoluteUrl(withLocale(pathname, supportedLocale)),
-    ]),
+  const currentUrl = toMetadataUrl(
+    canonicalUrl ?? absoluteUrl(withLocale(pathname, locale)),
   );
+
+  const languages = languageAlternates
+    ? Object.fromEntries(
+        Object.entries(languageAlternates)
+          .filter(([, url]) => Boolean(url))
+          .map(([supportedLocale, url]) => [
+            supportedLocale,
+            toMetadataUrl(url as string),
+          ]),
+      )
+    : Object.fromEntries(
+        locales.map((supportedLocale) => [
+          supportedLocale,
+          toMetadataUrl(absoluteUrl(withLocale(pathname, supportedLocale))),
+        ]),
+      );
 
   return {
     metadataBase: new URL(siteOrigin),
     title: pageTitle,
     description: pageDescription,
     alternates: {
-      canonical: absoluteUrl(currentPath),
-      languages,
+      canonical: currentUrl,
+      languages: Object.keys(languages).length > 0 ? languages : undefined,
     },
     openGraph: {
       type: "website",
       locale: locale === "zh" ? "zh_CN" : "en_US",
-      url: absoluteUrl(currentPath),
+      url: currentUrl,
       title: pageTitle,
       description: pageDescription,
       siteName: brandName[locale],

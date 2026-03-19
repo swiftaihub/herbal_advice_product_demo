@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { aiPathways } from "@/lib/ai-pathways";
+import { getContentPath } from "@/lib/content-links";
 import { getActiveProducts } from "@/lib/data/products";
 import { getMessages } from "@/i18n/messages";
 import { aiGuideUrl } from "@/lib/site";
@@ -126,7 +127,7 @@ export default async function AiGuidePage({
                   return (
                     <LocaleLink
                       key={slug}
-                      href={`/products/${slug}`}
+                      href={getContentPath(product, "products", typedLocale)}
                       locale={typedLocale}
                       className="rounded-full border border-[var(--color-line)] bg-[rgba(248,243,235,0.8)] px-4 py-2 text-sm text-[var(--color-ink)] transition hover:border-[var(--color-accent)]"
                     >

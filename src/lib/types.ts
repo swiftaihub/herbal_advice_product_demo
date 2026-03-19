@@ -2,6 +2,7 @@ export type Locale = "en" | "zh";
 
 export type LocalizedString = Record<Locale, string>;
 export type LocalizedStringList = Record<Locale, string[]>;
+export type LocalizedLinks = Partial<Record<Locale, string>>;
 
 export interface Product {
   slug: string;
@@ -23,6 +24,7 @@ export interface Product {
   disclaimer: LocalizedString;
   images: string[];
   buy_link: string;
+  links?: LocalizedLinks;
   status: string;
 }
 
@@ -37,26 +39,31 @@ export interface Ingredient {
   pairings: string[];
   cautions: LocalizedString;
   images: string[];
+  links?: LocalizedLinks;
 }
 
 export interface ArticleMeta {
   slug: string;
-  title: LocalizedString;
-  excerpt: LocalizedString;
-  category: LocalizedString;
-  tags: LocalizedStringList;
+  locale: Locale;
+  availableLocales: Locale[];
+  title: string;
+  excerpt: string;
+  category: string;
+  tags: string[];
   coverImage: string;
   featured: boolean;
   publishedAt: string;
+  updatedAt?: string;
   readingTheme: "serif" | "sans";
   relatedProducts: string[];
   relatedIngredients: string[];
-  seoTitle?: LocalizedString;
-  seoDescription?: LocalizedString;
+  seoTitle?: string;
+  seoDescription?: string;
+  links?: LocalizedLinks;
 }
 
 export interface Article extends ArticleMeta {
-  bodyHtml: string;
+  body: string;
   readingMinutes: number;
 }
 

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import {
   Cormorant_Garamond,
   Manrope,
@@ -48,6 +48,14 @@ export const metadata: Metadata = {
     shortcut: toSitePath("/images/brand/logo-mark.png"),
     apple: toSitePath("/images/brand/logo-mark.png"),
   },
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 10,
+  userScalable: true,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

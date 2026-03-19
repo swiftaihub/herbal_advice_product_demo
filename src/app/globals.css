@@ -23,10 +23,14 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
+  position: relative;
+  isolation: isolate;
   min-height: 100vh;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top left, rgba(176, 136, 74, 0.12), transparent 34%),
     radial-gradient(circle at right 20%, rgba(167, 188, 146, 0.16), transparent 24%),
@@ -39,6 +43,7 @@ body {
 body::before {
   position: fixed;
   inset: 0;
+  z-index: -1;
   pointer-events: none;
   background-image:
     linear-gradient(rgba(255, 255, 255, 0.22) 1px, transparent 1px),
@@ -55,7 +60,14 @@ a {
 }
 
 img {
+  display: block;
+  max-width: 100%;
+  height: auto;
   color: transparent;
+}
+
+main {
+  overflow-x: clip;
 }
 
 ::selection {
@@ -69,7 +81,7 @@ img {
 
 .page-section {
   position: relative;
-  padding-inline: 1rem;
+  padding-inline: 0.875rem;
 }
 
 @media (min-width: 640px) {
@@ -88,9 +100,279 @@ img {
   margin-top: 0;
 }
 
+.article-prose {
+  color: var(--color-copy);
+  font-size: 1.02rem;
+  line-height: 1.95;
+}
+
+.article-prose > * + * {
+  margin-top: 1.5rem;
+}
+
+.article-prose h1,
+.article-prose h2,
+.article-prose h3,
+.article-prose h4 {
+  color: var(--color-ink);
+  font-family: var(--font-display-en), var(--font-display-zh), serif;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+}
+
+.article-prose h2 {
+  margin-top: 3.5rem;
+  font-size: clamp(2rem, 3.8vw, 3.25rem);
+}
+
+.article-prose h3 {
+  margin-top: 2.4rem;
+  font-size: clamp(1.45rem, 2.4vw, 2.05rem);
+}
+
+.article-prose h4 {
+  margin-top: 2rem;
+  font-size: clamp(1.18rem, 2vw, 1.4rem);
+}
+
+.article-prose p {
+  margin-top: 1.25rem;
+}
+
+.article-prose strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.article-prose em {
+  color: var(--color-ink-soft);
+}
+
+.article-prose u {
+  text-decoration-color: rgba(176, 136, 74, 0.5);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.2em;
+}
+
+.article-prose a {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(176, 136, 74, 0.34);
+  text-underline-offset: 0.24em;
+}
+
+.article-prose ul,
+.article-prose ol {
+  margin-top: 1.5rem;
+  padding-left: 1.5rem;
+}
+
+.article-prose ul {
+  list-style: disc;
+}
+
+.article-prose ol {
+  list-style: decimal;
+}
+
+.article-prose li + li {
+  margin-top: 0.65rem;
+}
+
+.article-prose blockquote {
+  margin-top: 2rem;
+  border: 1px solid rgba(111, 89, 64, 0.12);
+  border-left: 4px solid rgba(176, 136, 74, 0.62);
+  border-radius: 1.75rem;
+  background: rgba(255, 250, 241, 0.9);
+  padding: 1.25rem 1.4rem;
+  color: var(--color-ink);
+}
+
+.article-prose blockquote > :first-child {
+  margin-top: 0;
+}
+
+.article-prose blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.article-prose code {
+  border-radius: 0.7rem;
+  background: rgba(176, 136, 74, 0.1);
+  padding: 0.12rem 0.45rem;
+  color: var(--color-ink);
+  font-size: 0.92em;
+}
+
+.article-prose pre {
+  overflow-x: auto;
+  border: 1px solid rgba(111, 89, 64, 0.12);
+  border-radius: 1.6rem;
+  background: rgba(34, 30, 22, 0.94);
+  padding: 1.1rem 1.2rem;
+  color: var(--color-paper);
+}
+
+.article-prose pre code {
+  background: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.article-prose img,
+.article-prose figure img {
+  display: block;
+  width: 100%;
+  border-radius: 1.8rem;
+  margin-top: 2rem;
+  border: 1px solid rgba(111, 89, 64, 0.1);
+  background: rgba(248, 243, 235, 0.75);
+}
+
+.article-prose figure {
+  margin-top: 2.2rem;
+}
+
+.article-prose figcaption {
+  margin-top: 0.75rem;
+  text-align: center;
+  font-size: 0.92rem;
+  color: var(--color-muted);
+}
+
+.article-prose table {
+  width: 100%;
+  margin-top: 2rem;
+  border-collapse: collapse;
+  overflow: hidden;
+  border: 1px solid rgba(111, 89, 64, 0.12);
+  border-radius: 1.4rem;
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.article-prose thead {
+  background: rgba(176, 136, 74, 0.1);
+}
+
+.article-prose th,
+.article-prose td {
+  border-bottom: 1px solid rgba(111, 89, 64, 0.1);
+  padding: 0.95rem 1rem;
+  text-align: left;
+  vertical-align: top;
+}
+
+.article-prose tr:last-child td {
+  border-bottom: 0;
+}
+
+.article-prose aside[data-callout] {
+  margin-top: 2rem;
+  border: 1px solid rgba(111, 89, 64, 0.12);
+  border-radius: 1.9rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.92),
+    rgba(248, 243, 235, 0.92)
+  );
+  padding: 1.25rem 1.35rem;
+  box-shadow: 0 10px 30px rgba(24, 21, 17, 0.05);
+}
+
+.article-prose aside[data-callout="info"] {
+  background: linear-gradient(
+    135deg,
+    rgba(250, 247, 239, 0.96),
+    rgba(236, 228, 209, 0.96)
+  );
+}
+
+.article-prose aside[data-callout="warning"] {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 246, 236, 0.98),
+    rgba(248, 227, 200, 0.96)
+  );
+}
+
+.article-prose aside[data-callout="note"] {
+  background: linear-gradient(
+    135deg,
+    rgba(245, 248, 242, 0.98),
+    rgba(229, 239, 224, 0.96)
+  );
+}
+
+.article-prose details {
+  margin-top: 1.6rem;
+  border: 1px solid rgba(111, 89, 64, 0.12);
+  border-radius: 1.5rem;
+  background: rgba(248, 243, 235, 0.62);
+  padding: 1rem 1.15rem;
+}
+
+.article-prose summary {
+  cursor: pointer;
+  color: var(--color-ink);
+  font-weight: 600;
+  list-style: none;
+}
+
 .article-prose hr {
   margin-top: 2.5rem;
   border-color: var(--color-line);
+}
+
+@media (max-width: 639px) {
+  .article-prose {
+    font-size: 0.98rem;
+    line-height: 1.78;
+  }
+
+  .article-prose > * + * {
+    margin-top: 1.15rem;
+  }
+
+  .article-prose h2 {
+    margin-top: 2.5rem;
+    font-size: 1.78rem;
+  }
+
+  .article-prose h3 {
+    margin-top: 2rem;
+    font-size: 1.36rem;
+  }
+
+  .article-prose h4 {
+    margin-top: 1.5rem;
+    font-size: 1.08rem;
+  }
+
+  .article-prose blockquote,
+  .article-prose aside[data-callout],
+  .article-prose details {
+    border-radius: 1.35rem;
+    padding: 1rem 1.05rem;
+  }
+
+  .article-prose img,
+  .article-prose figure img {
+    border-radius: 1.3rem;
+    margin-top: 1.5rem;
+  }
+
+  .article-prose table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  .article-prose th,
+  .article-prose td {
+    padding: 0.8rem 0.85rem;
+  }
 }
 
 .scrollbar-premium {

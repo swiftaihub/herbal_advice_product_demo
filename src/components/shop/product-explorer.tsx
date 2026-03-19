@@ -92,8 +92,8 @@ export function ProductExplorer({
     });
 
   return (
-    <div className="grid gap-10 lg:h-[calc(100vh-8rem)] lg:grid-cols-[minmax(18rem,0.34fr)_minmax(0,0.66fr)] lg:items-start lg:overflow-hidden">
-      <aside className="scrollbar-premium space-y-6 rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/75 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.04)] lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
+    <div className="grid gap-6 lg:h-[calc(100vh-8rem)] lg:grid-cols-[minmax(18rem,0.34fr)_minmax(0,0.66fr)] lg:items-start lg:overflow-hidden">
+      <aside className="scrollbar-premium space-y-4 rounded-[1.6rem] border border-[rgba(111,89,64,0.12)] bg-white/75 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.04)] sm:space-y-5 sm:p-5 lg:h-full lg:min-h-0 lg:space-y-6 lg:overflow-y-auto lg:overscroll-contain lg:rounded-[2rem] lg:p-6 lg:pr-4">
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             {copy.searchLabel}
@@ -108,7 +108,7 @@ export function ProductExplorer({
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             {copy.sortLabel}
           </p>
-          <div className="grid gap-2">
+          <div className="grid gap-2 min-[360px]:grid-cols-2 lg:grid-cols-1">
             {[
               { value: "featured", label: copy.sortFeatured },
               { value: "price-low", label: copy.sortPriceLow },
@@ -117,7 +117,7 @@ export function ProductExplorer({
               <button
                 key={option.value}
                 type="button"
-                className={`rounded-2xl border px-4 py-3 text-left text-sm transition ${sort === option.value ? "border-[var(--color-accent)] bg-[rgba(176,136,74,0.08)] text-[var(--color-ink)]" : "border-[var(--color-line)] text-[var(--color-muted)] hover:border-[var(--color-accent)]"}`}
+                className={`rounded-xl border px-3.5 py-2.5 text-left text-[13px] transition sm:text-sm ${sort === option.value ? "border-[var(--color-accent)] bg-[rgba(176,136,74,0.08)] text-[var(--color-ink)]" : "border-[var(--color-line)] text-[var(--color-muted)] hover:border-[var(--color-accent)]"}`}
                 onClick={() => setSort(option.value as SortOption)}
               >
                 {option.label}
@@ -167,11 +167,11 @@ export function ProductExplorer({
       </aside>
       <div className="scrollbar-premium lg:h-full lg:min-h-0 lg:overflow-y-auto lg:overscroll-contain lg:pr-4">
         {filteredProducts.length === 0 ? (
-          <div className="rounded-[2rem] border border-dashed border-[rgba(111,89,64,0.22)] bg-white/55 px-8 py-14 text-center text-[var(--color-muted)]">
+          <div className="rounded-[1.6rem] border border-dashed border-[rgba(111,89,64,0.22)] bg-white/55 px-5 py-10 text-center text-sm text-[var(--color-muted)] sm:rounded-[2rem] sm:px-8 sm:py-14">
             {copy.noResults}
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-2">
+          <div className="grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-2">
             {filteredProducts.map((product) => (
               <ProductCard
                 key={product.slug}
@@ -202,7 +202,7 @@ function FilterGroup({
   renderLabel: (value: string) => string;
 }) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5 sm:space-y-3">
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
         {label}
       </p>
@@ -213,7 +213,7 @@ function FilterGroup({
             <button
               key={item}
               type="button"
-              className={`rounded-full border px-4 py-2 text-sm transition ${active ? "border-[var(--color-accent)] bg-[rgba(176,136,74,0.1)] text-[var(--color-ink)]" : "border-[var(--color-line)] bg-white/70 text-[var(--color-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-ink)]"}`}
+              className={`rounded-full border px-3 py-1.5 text-[13px] transition sm:px-4 sm:py-2 sm:text-sm ${active ? "border-[var(--color-accent)] bg-[rgba(176,136,74,0.1)] text-[var(--color-ink)]" : "border-[var(--color-line)] bg-white/70 text-[var(--color-muted)] hover:border-[var(--color-accent)] hover:text-[var(--color-ink)]"}`}
               onClick={() => onSelect(active ? null : item)}
             >
               {renderLabel(item)}

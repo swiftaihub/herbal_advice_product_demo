@@ -57,20 +57,20 @@ export function SiteHeader({
 
   return (
     <header className="sticky top-0 z-50 border-b border-[rgba(111,89,64,0.08)] bg-[rgba(250,245,238,0.78)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-5">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-3.5 py-3 sm:px-6 sm:py-4 lg:px-8">
+        <div className="flex items-center gap-4 sm:gap-5">
           <Link
             href={withLocale("/", locale)}
             prefetch={false}
             className="flex items-center gap-3"
           >
-            <div className="relative h-12 w-12 overflow-hidden rounded-full border border-[rgba(176,136,74,0.18)] bg-white/80">
+            <div className="relative h-10 w-10 overflow-hidden rounded-full border border-[rgba(176,136,74,0.18)] bg-white/80 sm:h-12 sm:w-12">
               <Image
                 src="/images/brand/logo-mark.png"
                 alt={brandName}
                 fill
                 className="object-cover"
-                sizes="48px"
+                sizes="(max-width: 640px) 40px, 48px"
               />
             </div>
             <div className="hidden sm:block">
@@ -116,7 +116,7 @@ export function SiteHeader({
           <Link
             href={withLocale("/sign-in", locale)}
             prefetch={false}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white sm:h-11 sm:w-11"
             aria-label={accountLabel}
           >
             <UserRound className="h-5 w-5" />
@@ -124,7 +124,7 @@ export function SiteHeader({
           <button
             type="button"
             onClick={openDrawer}
-            className="relative inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white"
+            className="relative inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white sm:h-11 sm:w-11"
             aria-label={cartLabel}
           >
             <ShoppingBag className="h-5 w-5" />
@@ -137,7 +137,7 @@ export function SiteHeader({
           <button
             type="button"
             onClick={() => setIsMenuOpen((current) => !current)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--color-line)] bg-white/80 text-[var(--color-ink)] transition hover:border-[var(--color-accent)] hover:bg-white sm:h-11 sm:w-11 lg:hidden"
             aria-label={common.menu}
           >
             {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -147,7 +147,7 @@ export function SiteHeader({
       <div
         className={cn(
           "border-t border-[rgba(111,89,64,0.08)] bg-[rgba(250,245,238,0.94)] px-4 transition lg:hidden",
-          isMenuOpen ? "max-h-[480px] py-4 opacity-100" : "max-h-0 overflow-hidden py-0 opacity-0",
+          isMenuOpen ? "max-h-[480px] py-3 opacity-100 sm:py-4" : "max-h-0 overflow-hidden py-0 opacity-0",
         )}
       >
         <div className="mx-auto max-w-7xl space-y-2 sm:px-2">

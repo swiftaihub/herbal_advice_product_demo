@@ -1,13 +1,13 @@
 # Herbal Atelier Frontend
 
-Production-ready standalone bilingual herbal wellness tea storefront built with Next.js App Router, TypeScript, Tailwind CSS, and build-time generated article content.
+Production-ready standalone bilingual herbal wellness tea storefront built with Next.js App Router, TypeScript, Tailwind CSS, and a filesystem-driven article content system.
 
 ## What is included
 
 - Premium bilingual Chinese / English storefront
 - Data-driven shop and product detail pages from `products.json`
 - Data-driven ingredient library from `ingredients.json`
-- Scalable MDX article system from `content/articles/**`
+- Markdown-first article system from `content/articles/**`
 - Prominent Helper AI integration at `/ai-guide`
 - Persistent frontend cart with drawer + cart page
 - Sign in, create account, forgot password, and account placeholder pages
@@ -32,7 +32,7 @@ The site is built around these repo files:
 - TypeScript
 - Tailwind CSS `4`
 - App Router
-- Build-time article generation for static HTML output
+- Filesystem article discovery with schema validation
 
 ## Run locally
 
@@ -84,7 +84,7 @@ The unprefixed root route is a static locale chooser. Canonical public pages liv
 - `src/i18n/`
   Locale config and UI dictionaries
 - `content/articles/`
-  File-based bilingual article content compiled into static records at build time
+  File-based bilingual article content discovered directly from locale files
 
 ## Adding products or ingredients
 
@@ -101,45 +101,84 @@ Create a new folder under `content/articles/`, for example:
 
 ```text
 content/articles/my-new-article/
-  meta.json
   en.mdx
   zh.mdx
 ```
 
-`meta.json` must include:
+`.md` and `.mdx` are both supported. The folder name becomes the article slug automatically, so adding a new article never requires route registration, imports, or page code edits.
 
-- `slug`
+Each locale file uses frontmatter plus a Markdown body. Example `en.mdx`:
+
+```md
+---
+title: "My New Article"
+excerpt: "A short summary for cards, listings, and SEO."
+category: "Daily wellness"
+tags:
+  - Morning rhythm
+  - Ritual
+coverImage: /images/articles/example.jpg
+featured: false
+publishedAt: 2026-03-14
+updatedAt: 2026-03-16
+readingTheme: serif
+relatedProducts:
+  - zaoxi-vitality-tea
+relatedIngredients:
+  - astragalus
+seoTitle: "My New Article"
+seoDescription: "A longer SEO summary if needed."
+link: https://tea.swiftaihub.com/en/articles/my-new-article
+---
+
+## A real article heading
+
+Write normal Markdown here.
+
+- Lists
+- Tables
+- Images
+- Inline links
+
+> Callouts can be written as blockquotes or richer HTML blocks.
+
+<aside data-callout="info">
+  <p>Trusted repo content can use semantic HTML for richer layouts.</p>
+</aside>
+```
+
+Required frontmatter fields:
+
 - `title`
 - `excerpt`
 - `category`
-- `tags`
 - `coverImage`
-- `featured`
 - `publishedAt`
+
+Optional frontmatter fields:
+
+- `tags`
+- `featured`
+- `updatedAt`
 - `readingTheme`
 - `relatedProducts`
 - `relatedIngredients`
+- `seoTitle`
+- `seoDescription`
+- `link`
 
-Example shape:
+Supported body features:
 
-```json
-{
-  "slug": "my-new-article",
-  "title": { "en": "Title", "zh": "标题" },
-  "excerpt": { "en": "Excerpt", "zh": "摘要" },
-  "category": { "en": "Category", "zh": "分类" },
-  "tags": { "en": ["Tag"], "zh": ["标签"] },
-  "coverImage": "/images/articles/example.jpg",
-  "featured": false,
-  "publishedAt": "2026-03-14",
-  "readingTheme": "serif",
-  "relatedProducts": ["zaoxi-vitality-tea"],
-  "relatedIngredients": ["astragalus"]
-}
-```
+- Headings, paragraphs, emphasis, strong text, and inline links
+- Ordered and unordered lists
+- Blockquotes and callout-style HTML blocks
+- Tables via GitHub Flavored Markdown
+- Inline and block code
+- Images and figures
+- Details/summary sections
+- Semantic HTML for richer layouts, spacing, and content emphasis
 
-No code changes are required when adding a correctly structured article folder.
-`npm run build` runs `scripts/generate-article-records.mjs` first, so Cloudflare deploys fully bundled article HTML instead of compiling MDX at runtime.
+No code changes are required when adding a correctly structured article folder. `npm run build` regenerates locale routes, validates frontmatter, and picks up every article automatically.
 
 ## Cloudflare deployment
 

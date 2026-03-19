@@ -9,6 +9,11 @@ import { LocaleLink } from "@/components/layout/locale-link";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeading } from "@/components/ui/section-heading";
+import {
+  getContentLanguageAlternates,
+  getContentPath,
+  getContentUrl,
+} from "@/lib/content-links";
 import { getRelatedArticlesForProduct } from "@/lib/data/articles";
 import { getAllIngredients } from "@/lib/data/ingredients";
 import {
@@ -49,12 +54,16 @@ export async function generateMetadata({
     return {};
   }
 
+  const alternates = getContentLanguageAlternates(product, "products");
+
   return buildMetadata({
     locale: typedLocale,
     pathname: `/products/${slug}`,
     title: product.name[typedLocale],
     description: product.summary[typedLocale],
     image: product.images[0],
+    canonicalUrl: alternates[typedLocale],
+    languageAlternates: alternates,
   });
 }
 
@@ -75,8 +84,9 @@ export default async function ProductDetailPage({
   const [ingredients, relatedProducts, relatedArticles] = await Promise.all([
     getAllIngredients(),
     getRelatedProducts(product, 4),
-    getRelatedArticlesForProduct(product.slug, 3),
+    getRelatedArticlesForProduct(product.slug, typedLocale, 3),
   ]);
+  const productUrl = getContentUrl(product, "products", typedLocale);
 
   const productIngredients = product.ingredients
     .map((ingredientSlug) =>
@@ -101,7 +111,7 @@ export default async function ProductDetailPage({
             priceCurrency: product.currency,
             price: product.price,
             availability: "https://schema.org/InStock",
-            url: absoluteUrl(`/products/${product.slug}`),
+            url: productUrl,
           },
           brand: {
             "@type": "Brand",
@@ -109,11 +119,11 @@ export default async function ProductDetailPage({
           },
         }}
       />
-      <div className="page-section py-14 md:py-20">
-        <div className="mx-auto max-w-7xl space-y-12">
-          <div className="grid gap-8 xl:grid-cols-[0.58fr_0.42fr]">
-            <div className="space-y-6">
-              <div className="relative aspect-[4/4.5] overflow-hidden rounded-[2.75rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_18px_48px_rgba(24,21,17,0.08)]">
+      <div className="page-section py-10 sm:py-12 md:py-20">
+        <div className="mx-auto max-w-7xl space-y-10 md:space-y-12">
+          <div className="grid gap-5 sm:gap-6 xl:grid-cols-[0.58fr_0.42fr] xl:gap-8">
+            <div className="space-y-4 sm:space-y-6">
+              <div className="relative aspect-[4/4.7] overflow-hidden rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_18px_48px_rgba(24,21,17,0.08)] sm:aspect-[4/4.5] sm:rounded-[2.75rem]">
                 <Image
                   src={product.images[0]}
                   alt={product.name[typedLocale]}
@@ -124,7 +134,7 @@ export default async function ProductDetailPage({
                 />
               </div>
               {product.images[1] ? (
-                <div className="relative aspect-[5/3.2] overflow-hidden rounded-[2.5rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_14px_34px_rgba(24,21,17,0.05)]">
+                <div className="relative aspect-[5/3.3] overflow-hidden rounded-[1.9rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_14px_34px_rgba(24,21,17,0.05)] sm:aspect-[5/3.2] sm:rounded-[2.5rem]">
                   <Image
                     src={product.images[1]}
                     alt={`${product.name[typedLocale]} lifestyle`}
@@ -136,24 +146,24 @@ export default async function ProductDetailPage({
               ) : null}
             </div>
 
-            <div className="space-y-6">
-              <section className="rounded-[2.75rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-8 shadow-[0_18px_48px_rgba(24,21,17,0.06)] md:p-10">
+            <div className="space-y-5 sm:space-y-6">
+              <section className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-5 shadow-[0_18px_48px_rgba(24,21,17,0.06)] sm:rounded-[2.75rem] sm:p-6 md:p-10">
                 <div className="flex flex-wrap items-center gap-3">
                   {product.benefit_tags.slice(0, 3).map((tag) => (
                     <Badge key={tag}>{getBenefitLabel(tag, typedLocale)}</Badge>
                   ))}
                 </div>
-                <h1 className="mt-5 font-display text-5xl leading-tight text-[var(--color-ink)] md:text-6xl">
+                <h1 className="mt-4 font-display text-[2.7rem] leading-[1.02] text-[var(--color-ink)] sm:mt-5 sm:text-5xl md:text-6xl">
                   {product.name[typedLocale]}
                 </h1>
-                <p className="mt-4 text-lg leading-8 text-[var(--color-muted)]">
+                <p className="mt-3 text-base leading-7 text-[var(--color-muted)] sm:mt-4 sm:text-lg sm:leading-8">
                   {product.tagline[typedLocale]}
                 </p>
-                <p className="mt-5 text-base leading-8 text-[var(--color-copy)]">
+                <p className="mt-4 text-sm leading-7 text-[var(--color-copy)] sm:mt-5 sm:text-base sm:leading-8">
                   {product.summary[typedLocale]}
                 </p>
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <div className="rounded-[2rem] bg-[rgba(248,243,235,0.82)] p-5">
+                <div className="mt-5 grid gap-3 min-[360px]:grid-cols-2 sm:mt-6 sm:gap-4">
+                  <div className="rounded-[1.5rem] bg-[rgba(248,243,235,0.82)] p-4 sm:rounded-[2rem] sm:p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent)]">
                       {copy.product.keyBenefits}
                     </p>
@@ -168,7 +178,7 @@ export default async function ProductDetailPage({
                       ))}
                     </div>
                   </div>
-                  <div className="rounded-[2rem] bg-[rgba(248,243,235,0.82)] p-5">
+                  <div className="rounded-[1.5rem] bg-[rgba(248,243,235,0.82)] p-4 sm:rounded-[2rem] sm:p-5">
                     <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent)]">
                       {copy.product.flavorNotes}
                     </p>
@@ -197,30 +207,30 @@ export default async function ProductDetailPage({
             </div>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+          <div className="grid gap-4 min-[360px]:grid-cols-2 lg:grid-cols-3 sm:gap-5 lg:gap-6">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.product.brewGuide}
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-copy)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {product.brew_guide[typedLocale]}
               </p>
             </article>
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.product.targetUsers}
               </h2>
-              <ul className="mt-4 space-y-2 text-sm leading-7 text-[var(--color-copy)]">
+              <ul className="mt-3 space-y-2 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {product.target_users[typedLocale].map((item) => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>
             </article>
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {typedLocale === "zh" ? "适用状态线索" : "Helpful discovery signals"}
               </h2>
-              <div className="mt-4 space-y-4">
+              <div className="mt-3 space-y-3 sm:mt-4 sm:space-y-4">
                 <div>
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--color-accent)]">
                     {typedLocale === "zh" ? "体质类型" : "Constitution types"}
@@ -255,24 +265,24 @@ export default async function ProductDetailPage({
             </article>
           </div>
 
-          <section className="rounded-[2.5rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-8 shadow-[0_14px_34px_rgba(24,21,17,0.05)]">
+          <section className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-5 shadow-[0_14px_34px_rgba(24,21,17,0.05)] sm:rounded-[2.5rem] sm:p-8">
             <SectionHeading
               eyebrow={copy.product.ingredientsTitle}
               title={copy.product.ingredientsTitle}
               description={typedLocale === "zh" ? "配方中的原料均可继续查看详细说明。" : "Every ingredient in the blend can be explored further in the library."}
             />
-            <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <div className="mt-6 grid gap-3 min-[360px]:grid-cols-2 xl:grid-cols-4 sm:mt-8 sm:gap-4">
               {productIngredients.map((ingredient) => (
                 <LocaleLink
                   key={ingredient.slug}
-                  href={`/ingredients/${ingredient.slug}`}
+                  href={getContentPath(ingredient, "ingredients", typedLocale)}
                   locale={typedLocale}
-                  className="rounded-[1.75rem] border border-[rgba(111,89,64,0.12)] bg-[rgba(248,243,235,0.76)] p-5 transition hover:border-[var(--color-accent)]"
+                  className="rounded-[1.35rem] border border-[rgba(111,89,64,0.12)] bg-[rgba(248,243,235,0.76)] p-4 transition hover:border-[var(--color-accent)] sm:rounded-[1.75rem] sm:p-5"
                 >
-                  <p className="font-display text-3xl text-[var(--color-ink)]">
+                  <p className="font-display text-[1.65rem] leading-[1.04] text-[var(--color-ink)] sm:text-3xl">
                     {ingredient.name[typedLocale]}
                   </p>
-                  <p className="mt-3 text-sm leading-7 text-[var(--color-copy)]">
+                  <p className="mt-2 text-sm leading-6 text-[var(--color-copy)] sm:mt-3 sm:leading-7">
                     {ingredient.summary[typedLocale]}
                   </p>
                 </LocaleLink>
@@ -280,20 +290,20 @@ export default async function ProductDetailPage({
             </div>
           </section>
 
-          <div className="grid gap-6 lg:grid-cols-2">
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-2 sm:gap-5 lg:gap-6">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.product.cautions}
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-copy)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {product.cautions[typedLocale]}
               </p>
             </article>
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.product.disclaimer}
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-copy)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {product.disclaimer[typedLocale]}
               </p>
             </article>
@@ -305,7 +315,7 @@ export default async function ProductDetailPage({
                 eyebrow={copy.common.relatedArticles}
                 title={copy.common.relatedArticles}
               />
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-8 grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-3 sm:mt-10 sm:gap-5 xl:gap-6">
                 {relatedArticles.map((article) => (
                   <ArticleCard
                     key={article.slug}
@@ -324,7 +334,7 @@ export default async function ProductDetailPage({
                 eyebrow={copy.common.relatedProducts}
                 title={copy.common.relatedProducts}
               />
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-8 grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-4 sm:mt-10 sm:gap-5 xl:gap-6">
                 {relatedProducts.map((relatedProduct) => (
                   <ProductCard
                     key={relatedProduct.slug}
@@ -338,13 +348,13 @@ export default async function ProductDetailPage({
             </section>
           ) : null}
 
-          <section className="rounded-[2.5rem] border border-[rgba(176,136,74,0.18)] bg-[rgba(248,243,235,0.86)] p-8 shadow-[0_14px_36px_rgba(24,21,17,0.04)]">
+          <section className="rounded-[2rem] border border-[rgba(176,136,74,0.18)] bg-[rgba(248,243,235,0.86)] p-5 shadow-[0_14px_36px_rgba(24,21,17,0.04)] sm:rounded-[2.5rem] sm:p-8">
             <SectionHeading
               eyebrow="Helper AI"
               title={copy.product.helperTitle}
               description={copy.product.helperBody}
             />
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-6 flex flex-col gap-2.5 min-[360px]:flex-row sm:mt-8">
               <LocaleLink href="/ai-guide" locale={typedLocale}>
                 <Badge className="px-5 py-3 text-sm normal-case tracking-normal">
                   Helper AI

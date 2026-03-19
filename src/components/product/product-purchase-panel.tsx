@@ -27,8 +27,8 @@ export function ProductPurchasePanel({
   const [quantity, setQuantity] = useState(1);
 
   return (
-    <aside className="rounded-[2.25rem] border border-[rgba(111,89,64,0.14)] bg-white/85 p-6 shadow-[0_18px_50px_rgba(24,21,17,0.08)] lg:sticky lg:top-28">
-      <div className="space-y-5">
+    <aside className="rounded-[1.9rem] border border-[rgba(111,89,64,0.14)] bg-white/85 p-5 shadow-[0_18px_50px_rgba(24,21,17,0.08)] sm:rounded-[2.25rem] sm:p-6 lg:sticky lg:top-28">
+      <div className="space-y-4 sm:space-y-5">
         <div className="space-y-2">
           <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--color-accent)]">
             {formatCurrency(product.price, product.currency, locale)}
@@ -61,8 +61,8 @@ export function ProductPurchasePanel({
             className="w-full"
           />
         </div>
-        <div className="space-y-3 rounded-[1.75rem] bg-[rgba(176,136,74,0.08)] p-5">
-          <p className="text-sm leading-7 text-[var(--color-copy)]">
+        <div className="space-y-3 rounded-[1.5rem] bg-[rgba(176,136,74,0.08)] p-4 sm:rounded-[1.75rem] sm:p-5">
+          <p className="text-sm leading-6 text-[var(--color-copy)] sm:leading-7">
             {helperLabel}
           </p>
           <LocaleLink href="/ai-guide" locale={locale}>

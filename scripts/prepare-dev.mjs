@@ -21,6 +21,7 @@ function removeIfPresent(relativePath) {
   fs.rmSync(targetPath, { recursive: true, force: true });
 }
 
+runScript("generate-article-bundle.mjs");
 runScript("generate-static-locale-routes.mjs");
 
 // Turbopack can keep a stale view of the removed legacy locale route tree.

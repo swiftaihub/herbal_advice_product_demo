@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import {
   anonymousContactPolicy,
+  applyRateLimit,
   applyRateLimits,
 } from "@/lib/server/rate-limit";
 import {
@@ -25,8 +26,15 @@ const maxNameLength = 80;
 const maxWebsiteLength = 120;
 
 const emailPattern = /\S+@\S+\.\S+/;
+const contactIngressPolicy = {
+  burstLimit: 4,
+  burstWindowMs: 60_000,
+  windowLimit: 12,
+  windowMs: 15 * 60_000,
+  cooldownMs: 15 * 60_000,
+} as const;
 
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 type ContactPayload = {
   email: string;
@@ -108,6 +116,17 @@ async function handleContact(request: Request) {
     return jsonResponse({ error: "forbidden" }, 403, requestId);
   }
 
+  if (identity.userAgentFamily === "automation") {
+    logServerEvent("warn", "contact_rejected", {
+      ...logBase,
+      reason: "automation_user_agent",
+      status: 403,
+    });
+    recordEndpointObservation(endpointName, 403, "automation_user_agent");
+
+    return jsonResponse({ error: "forbidden" }, 403, requestId);
+  }
+
   const contentLength = Number(request.headers.get("content-length") ?? 0);
 
   if (contentLength > maxBodyBytes) {
@@ -119,6 +138,42 @@ async function handleContact(request: Request) {
     recordEndpointObservation(endpointName, 413, "payload_too_large");
 
     return jsonResponse({ error: "payload_too_large" }, 413, requestId);
+  }
+
+  const coarseLimit = applyRateLimit(
+    `contact:ingress:ip:${identity.ipHash}`,
+    contactIngressPolicy,
+  );
+
+  if (coarseLimit.degraded) {
+    logServerEvent("warn", "rate_limit_store_degraded", {
+      ...logBase,
+      remaining: coarseLimit.remaining,
+    });
+  }
+
+  if (!coarseLimit.allowed) {
+    const retryAfterSeconds = Math.max(Math.ceil(coarseLimit.retryAfterMs / 1000), 1);
+
+    logServerEvent("warn", "contact_rate_limited", {
+      ...logBase,
+      reason: coarseLimit.reason ?? "rate_limited",
+      retryAfterSeconds,
+      status: 429,
+    });
+    recordEndpointObservation(endpointName, 429, coarseLimit.reason ?? "rate_limited");
+
+    return jsonResponse(
+      {
+        error: "rate_limited",
+        retryAfterSeconds,
+      },
+      429,
+      requestId,
+      {
+        "Retry-After": String(retryAfterSeconds),
+      },
+    );
   }
 
   const rawBody = await request.text();

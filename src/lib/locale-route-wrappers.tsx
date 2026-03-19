@@ -48,7 +48,7 @@ export function wrapLocalePage<T extends RouteParams = Record<string, never>>(
 ) {
   return async function WrappedLocalePage({
     params,
-  }: WrappedPageProps<T> = {}) {
+  }: WrappedPageProps<T>) {
     const resolvedParams = (params ? await params : {}) as T;
 
     return Page({
@@ -63,7 +63,7 @@ export function wrapLocaleMetadata<T extends RouteParams = Record<string, never>
 ) {
   return async function WrappedLocaleMetadata({
     params,
-  }: WrappedPageProps<T> = {}) {
+  }: WrappedPageProps<T>) {
     const resolvedParams = (params ? await params : {}) as T;
 
     return generateMetadata({

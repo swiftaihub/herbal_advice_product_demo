@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "node scripts/generate-static-locale-routes.mjs && next build",
+    "build": "node scripts/generate-article-bundle.mjs && node scripts/generate-static-locale-routes.mjs && next build --webpack",
     "predev": "node scripts/prepare-dev.mjs",
     "dev": "next dev",
     "start": "next start",

@@ -51,7 +51,7 @@ export default async function FaqPage({
           {
             question: "文章系统未来如何扩展？",
             answer:
-              "只需在 content/articles 文件夹中新增文章目录，并放入 meta.json、en.mdx 与 zh.mdx，列表与详情页会自动渲染。",
+              "只需在 content/articles 中新增文章目录，并加入带 frontmatter 的 en.mdx 和 zh.mdx（或 .md）内容文件，列表、详情页与元数据都会自动接入。",
           },
         ]
       : [
@@ -73,7 +73,7 @@ export default async function FaqPage({
           {
             question: "How does the article system scale later on?",
             answer:
-              "Add a new folder under content/articles with meta.json, en.mdx, and zh.mdx. The index and detail pages will ingest it automatically.",
+              "Add a new folder under content/articles with frontmatter-driven en.mdx and zh.mdx files, or use .md. The index, detail pages, and metadata will ingest them automatically.",
           },
         ];
 

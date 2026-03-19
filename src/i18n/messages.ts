@@ -159,8 +159,6 @@ export const messages = {
       category: "Category",
       tags: "Tags",
       featured: "Featured journal entries",
-      placeholderMessage:
-        "This seeded article is placeholder editorial content and is ready to be replaced or expanded by simply adding files in the content/articles folder.",
     },
     aiGuide: {
       eyebrow: "Helper AI",
@@ -415,8 +413,6 @@ export const messages = {
       category: "分类",
       tags: "标签",
       featured: "精选文章",
-      placeholderMessage:
-        "当前文章为占位编辑内容。后续只需在 content/articles 文件夹中新增内容文件，即可自动显示。",
     },
     aiGuide: {
       eyebrow: "Helper AI",

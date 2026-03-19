@@ -35,14 +35,14 @@ export default async function IngredientsPage({
   const ingredients = await getAllIngredients();
 
   return (
-    <div className="page-section py-14 md:py-20">
-      <div className="mx-auto max-w-7xl space-y-10">
+    <div className="page-section py-10 sm:py-12 md:py-20">
+      <div className="mx-auto max-w-7xl space-y-8 md:space-y-10">
         <SectionHeading
           eyebrow={copy.ingredient.eyebrow}
           title={copy.ingredient.title}
           description={copy.home.ingredientsBody}
         />
-        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-3 sm:gap-5 xl:gap-6">
           {ingredients.map((ingredient) => (
             <IngredientCard
               key={ingredient.slug}

@@ -45,13 +45,13 @@ export function SiteFooter({
 }: FooterProps) {
   return (
     <footer className="border-t border-[rgba(111,89,64,0.1)] bg-[rgba(243,236,226,0.92)]">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:px-8">
-        <div className="space-y-5">
-          <p className="font-display text-3xl text-[var(--color-ink)]">{brandName}</p>
+      <div className="mx-auto grid max-w-7xl gap-8 px-4 py-12 sm:grid-cols-2 sm:gap-10 sm:px-6 sm:py-14 lg:grid-cols-[1.2fr_0.8fr_0.8fr_0.8fr] lg:px-8">
+        <div className="space-y-4 sm:col-span-2 lg:col-span-1 lg:space-y-5">
+          <p className="font-display text-[2rem] text-[var(--color-ink)] sm:text-3xl">{brandName}</p>
           <p className="max-w-md text-sm leading-7 text-[var(--color-muted)]">
             {newsletterBody}
           </p>
-          <form className="space-y-3 rounded-[2rem] border border-[rgba(111,89,64,0.1)] bg-white/70 p-5">
+          <form className="space-y-3 rounded-[1.6rem] border border-[rgba(111,89,64,0.1)] bg-white/70 p-4 sm:rounded-[2rem] sm:p-5">
             <div className="space-y-2">
               <p className="font-medium text-[var(--color-ink)]">{newsletterTitle}</p>
               <p className="text-sm leading-6 text-[var(--color-muted)]">
@@ -136,7 +136,7 @@ export function SiteFooter({
         </div>
       </div>
       <div className="border-t border-[rgba(111,89,64,0.08)]">
-        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-6 text-sm text-[var(--color-muted)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-2 px-4 py-5 text-sm text-[var(--color-muted)] sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
           <span>
             © {new Date().getFullYear()} {brandName}. {footer.rights}
           </span>

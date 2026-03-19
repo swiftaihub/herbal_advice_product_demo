@@ -40,8 +40,8 @@ export default async function ShopPage({
   ]);
 
   return (
-    <div className="page-section py-14 md:py-20">
-      <div className="mx-auto max-w-7xl space-y-10">
+    <div className="page-section py-10 sm:py-12 md:py-20">
+      <div className="mx-auto max-w-7xl space-y-8 md:space-y-10">
         <SectionHeading
           eyebrow={copy.shop.eyebrow}
           title={copy.shop.title}

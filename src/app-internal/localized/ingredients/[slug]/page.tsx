@@ -8,13 +8,17 @@ import { LocaleLink } from "@/components/layout/locale-link";
 import { StructuredData } from "@/components/seo/structured-data";
 import { Badge } from "@/components/ui/badge";
 import { SectionHeading } from "@/components/ui/section-heading";
+import {
+  getContentLanguageAlternates,
+  getContentPath,
+  getContentUrl,
+} from "@/lib/content-links";
 import { getRelatedArticlesForIngredient } from "@/lib/data/articles";
 import { getAllIngredients, getIngredientBySlug } from "@/lib/data/ingredients";
 import { getProductsByIngredient } from "@/lib/data/products";
 import { getMessages } from "@/i18n/messages";
 import { buildMetadata } from "@/lib/seo";
 import type { Locale } from "@/lib/types";
-import { absoluteUrl } from "@/lib/utils";
 
 export const dynamicParams = false;
 
@@ -39,12 +43,16 @@ export async function generateMetadata({
     return {};
   }
 
+  const alternates = getContentLanguageAlternates(ingredient, "ingredients");
+
   return buildMetadata({
     locale: typedLocale,
     pathname: `/ingredients/${slug}`,
     title: ingredient.name[typedLocale],
     description: ingredient.summary[typedLocale],
     image: ingredient.images[0],
+    canonicalUrl: alternates[typedLocale],
+    languageAlternates: alternates,
   });
 }
 
@@ -65,8 +73,9 @@ export default async function IngredientDetailPage({
   const [ingredients, products, articles] = await Promise.all([
     getAllIngredients(),
     getProductsByIngredient(slug),
-    getRelatedArticlesForIngredient(slug),
+    getRelatedArticlesForIngredient(slug, typedLocale),
   ]);
+  const ingredientUrl = getContentUrl(ingredient, "ingredients", typedLocale);
 
   const pairingIngredients = ingredient.pairings
     .map((pairing) => ingredients.find((entry) => entry.slug === pairing))
@@ -80,13 +89,13 @@ export default async function IngredientDetailPage({
           "@type": "DefinedTerm",
           name: ingredient.name[typedLocale],
           description: ingredient.summary[typedLocale],
-          url: absoluteUrl(`/ingredients/${ingredient.slug}`),
+          url: ingredientUrl,
         }}
       />
-      <div className="page-section py-14 md:py-20">
-        <div className="mx-auto max-w-7xl space-y-12">
-          <div className="grid gap-8 lg:grid-cols-[0.92fr_1.08fr] lg:items-center">
-            <div className="relative aspect-[5/4.8] overflow-hidden rounded-[2.75rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_18px_48px_rgba(24,21,17,0.08)]">
+      <div className="page-section py-10 sm:py-12 md:py-20">
+        <div className="mx-auto max-w-7xl space-y-10 md:space-y-12">
+          <div className="grid gap-5 sm:gap-6 lg:grid-cols-[0.92fr_1.08fr] lg:items-center lg:gap-8">
+            <div className="relative aspect-[5/4.95] overflow-hidden rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-[var(--color-surface)] shadow-[0_18px_48px_rgba(24,21,17,0.08)] sm:aspect-[5/4.8] sm:rounded-[2.75rem]">
               <Image
                 src={ingredient.images[0]}
                 alt={ingredient.name[typedLocale]}
@@ -95,16 +104,16 @@ export default async function IngredientDetailPage({
                 sizes="(max-width: 1024px) 100vw, 45vw"
               />
             </div>
-            <section className="space-y-6 rounded-[2.75rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-8 shadow-[0_18px_48px_rgba(24,21,17,0.06)] md:p-10">
+            <section className="space-y-5 rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-5 shadow-[0_18px_48px_rgba(24,21,17,0.06)] sm:rounded-[2.75rem] sm:p-6 md:space-y-6 md:p-10">
               <Badge>{copy.ingredient.eyebrow}</Badge>
-              <h1 className="font-display text-5xl text-[var(--color-ink)] md:text-7xl">
+              <h1 className="font-display text-[2.8rem] leading-[1.02] text-[var(--color-ink)] sm:text-5xl md:text-7xl">
                 {ingredient.name[typedLocale]}
               </h1>
-              <p className="text-base leading-8 text-[var(--color-copy)] md:text-lg">
+              <p className="text-sm leading-7 text-[var(--color-copy)] sm:text-base sm:leading-8 md:text-lg">
                 {ingredient.summary[typedLocale]}
               </p>
-              <div className="grid gap-4 md:grid-cols-2">
-                <div className="rounded-[2rem] bg-[rgba(248,243,235,0.72)] p-5">
+              <div className="grid gap-3 min-[360px]:grid-cols-2 sm:gap-4">
+                <div className="rounded-[1.5rem] bg-[rgba(248,243,235,0.72)] p-4 sm:rounded-[2rem] sm:p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent)]">
                     {copy.ingredient.aliases}
                   </p>
@@ -119,7 +128,7 @@ export default async function IngredientDetailPage({
                     ))}
                   </div>
                 </div>
-                <div className="rounded-[2rem] bg-[rgba(248,243,235,0.72)] p-5">
+                <div className="rounded-[1.5rem] bg-[rgba(248,243,235,0.72)] p-4 sm:rounded-[2rem] sm:p-5">
                   <p className="text-xs font-semibold uppercase tracking-[0.22em] text-[var(--color-accent)]">
                     {copy.ingredient.flavorProfile}
                   </p>
@@ -138,8 +147,8 @@ export default async function IngredientDetailPage({
             </section>
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-3">
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+          <div className="grid gap-4 min-[360px]:grid-cols-2 lg:grid-cols-3 sm:gap-5 lg:gap-6">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.ingredient.nutritionFocus}
               </h2>
@@ -154,35 +163,35 @@ export default async function IngredientDetailPage({
                 ))}
               </div>
             </article>
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.ingredient.traditionalUse}
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-copy)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {ingredient.traditional_use[typedLocale]}
               </p>
             </article>
-            <article className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-6 shadow-[0_12px_34px_rgba(24,21,17,0.05)]">
+            <article className="rounded-[1.55rem] border border-[rgba(111,89,64,0.12)] bg-white/82 p-4 shadow-[0_12px_34px_rgba(24,21,17,0.05)] sm:rounded-[2rem] sm:p-6">
               <h2 className="font-display text-3xl text-[var(--color-ink)]">
                 {copy.ingredient.cautions}
               </h2>
-              <p className="mt-4 text-sm leading-7 text-[var(--color-copy)]">
+              <p className="mt-3 text-sm leading-6 text-[var(--color-copy)] sm:mt-4 sm:leading-7">
                 {ingredient.cautions[typedLocale]}
               </p>
             </article>
           </div>
 
-          <section className="rounded-[2.5rem] border border-[rgba(111,89,64,0.12)] bg-[rgba(248,243,235,0.78)] p-8 shadow-[0_14px_36px_rgba(24,21,17,0.04)]">
+          <section className="rounded-[2rem] border border-[rgba(111,89,64,0.12)] bg-[rgba(248,243,235,0.78)] p-5 shadow-[0_14px_36px_rgba(24,21,17,0.04)] sm:rounded-[2.5rem] sm:p-8">
             <SectionHeading
               eyebrow={copy.ingredient.pairings}
               title={copy.ingredient.pairings}
               description={typedLocale === "zh" ? "这些原料常与当前原料形成更完整的杯中层次。" : "These ingredients are often paired to shape a fuller cup profile."}
             />
-            <div className="mt-8 flex flex-wrap gap-3">
+            <div className="mt-6 flex flex-wrap gap-2.5 sm:mt-8 sm:gap-3">
               {pairingIngredients.map((pairing) => (
                 <LocaleLink
                   key={pairing.slug}
-                  href={`/ingredients/${pairing.slug}`}
+                  href={getContentPath(pairing, "ingredients", typedLocale)}
                   locale={typedLocale}
                   className="rounded-full border border-[var(--color-line)] bg-white/80 px-4 py-2 text-sm text-[var(--color-ink)] transition hover:border-[var(--color-accent)]"
                 >
@@ -198,7 +207,7 @@ export default async function IngredientDetailPage({
                 eyebrow={copy.common.relatedProducts}
                 title={copy.ingredient.relatedProducts}
               />
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-8 grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-3 sm:mt-10 sm:gap-5 xl:gap-6">
                 {products.map((product) => (
                   <ProductCard
                     key={product.slug}
@@ -218,7 +227,7 @@ export default async function IngredientDetailPage({
                 eyebrow={copy.common.relatedArticles}
                 title={copy.ingredient.relatedArticles}
               />
-              <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+              <div className="mt-8 grid gap-4 min-[360px]:grid-cols-2 xl:grid-cols-3 sm:mt-10 sm:gap-5 xl:gap-6">
                 {articles.map((article) => (
                   <ArticleCard
                     key={article.slug}

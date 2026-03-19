@@ -1,6 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import matter from "gray-matter";
+
 const repoRoot = process.cwd();
 const sharedRoot = path.join(repoRoot, "src", "app-internal", "localized");
 const appRoot = path.join(repoRoot, "src", "app");
@@ -8,6 +10,7 @@ const articlesRoot = path.join(repoRoot, "content", "articles");
 const productsFile = path.join(repoRoot, "products.json");
 const ingredientsFile = path.join(repoRoot, "ingredients.json");
 const locales = ["en", "zh"];
+const articleFilePattern = /^(en|zh)\.(md|mdx)$/i;
 
 const routeDefinitions = [
   { kind: "layout", source: "layout.tsx", target: "layout.tsx" },
@@ -59,19 +62,62 @@ const slugRouteDefinitions = [
   {
     source: "articles/[slug]/page.tsx",
     targetBase: "articles",
-    getSlugs: getArticleSlugs,
+    getEntries: getArticleEntries,
   },
   {
     source: "ingredients/[slug]/page.tsx",
     targetBase: "ingredients",
-    getSlugs: getIngredientSlugs,
+    getEntries: getIngredientEntries,
   },
   {
     source: "products/[slug]/page.tsx",
     targetBase: "products",
-    getSlugs: getProductSlugs,
+    getEntries: getProductEntries,
   },
 ];
+
+function normalizePath(pathname) {
+  return pathname.replace(/\/{2,}/g, "/").replace(/\/$/, "") || "/";
+}
+
+function extractLocalizedPath(link) {
+  const trimmed = link?.trim();
+
+  if (!trimmed) {
+    return undefined;
+  }
+
+  if (trimmed.startsWith("/")) {
+    return normalizePath(trimmed);
+  }
+
+  try {
+    const url = new URL(trimmed);
+    return normalizePath(url.pathname);
+  } catch {
+    return undefined;
+  }
+}
+
+function getRouteSegments(entry, targetBase, locale) {
+  const localizedPath = extractLocalizedPath(entry.links?.[locale]);
+
+  if (!localizedPath) {
+    return [entry.slug];
+  }
+
+  const segments = localizedPath.split("/").filter(Boolean);
+
+  if (segments[0] === locale && segments[1] === targetBase && segments.length > 2) {
+    return segments.slice(2);
+  }
+
+  if (segments[0] === targetBase && segments.length > 1) {
+    return segments.slice(1);
+  }
+
+  return [entry.slug];
+}
 
 function toAliasPath(relativeFilePath) {
   return `@/app-internal/localized/${relativeFilePath.replace(/\\/g, "/").replace(/\.tsx$/, "")}`;
@@ -164,27 +210,79 @@ function verifySharedSources() {
   }
 }
 
-function getArticleSlugs() {
+function getArticleEntries(locale) {
   return fs
     .readdirSync(articlesRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map((entry) => entry.name)
-    .sort();
+    .flatMap((entry) => {
+      const articleRoot = path.join(articlesRoot, entry.name);
+      const localeFiles = fs
+        .readdirSync(articleRoot, { withFileTypes: true })
+        .filter(
+          (file) => file.isFile() && articleFilePattern.test(file.name),
+        );
+
+      if (localeFiles.length === 0) {
+        throw new Error(
+          `Article "${entry.name}" must include at least one locale file named en.md, en.mdx, zh.md, or zh.mdx.`,
+        );
+      }
+
+      return localeFiles
+        .map((file) => {
+          const fileLocale = file.name.slice(0, 2);
+
+          if (fileLocale !== locale) {
+            return null;
+          }
+
+          const source = fs.readFileSync(path.join(articleRoot, file.name), "utf8");
+          const parsed = matter(source);
+          const link = typeof parsed.data?.link === "string" ? parsed.data.link : undefined;
+
+          return {
+            slug: entry.name,
+            links: link ? { [locale]: link } : undefined,
+          };
+        })
+        .filter(Boolean);
+    })
+    .sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-function getIngredientSlugs() {
+function getIngredientEntries() {
   const ingredients = JSON.parse(fs.readFileSync(ingredientsFile, "utf8"));
 
-  return ingredients.map((ingredient) => ingredient.slug).sort();
+  return ingredients
+    .map((ingredient) => ({
+      slug: ingredient.slug,
+      links: ingredient.links,
+    }))
+    .sort((a, b) => a.slug.localeCompare(b.slug));
 }
 
-function getProductSlugs() {
+function getProductEntries() {
   const products = JSON.parse(fs.readFileSync(productsFile, "utf8"));
 
   return products
     .filter((product) => product.status === "active")
-    .map((product) => product.slug)
-    .sort();
+    .map((product) => ({
+      slug: product.slug,
+      links: product.links,
+    }))
+    .sort((a, b) => a.slug.localeCompare(b.slug));
+}
+
+function registerOutput(registry, outputPath, sourceLabel) {
+  const existing = registry.get(outputPath);
+
+  if (existing && existing !== sourceLabel) {
+    throw new Error(
+      `Route generation conflict at ${outputPath}. Both "${existing}" and "${sourceLabel}" resolve to the same output file.`,
+    );
+  }
+
+  registry.set(outputPath, sourceLabel);
 }
 
 function main() {
@@ -192,10 +290,12 @@ function main() {
 
   for (const locale of locales) {
     const localeRoot = path.join(appRoot, locale);
+    const writtenOutputs = new Map();
     fs.rmSync(localeRoot, { recursive: true, force: true });
 
     for (const routeDefinition of routeDefinitions) {
       const outputPath = path.join(localeRoot, routeDefinition.target);
+      registerOutput(writtenOutputs, outputPath, routeDefinition.target);
       ensureDirectory(outputPath);
       fs.writeFileSync(outputPath, buildWrapperContent(locale, routeDefinition), "utf8");
     }
@@ -203,10 +303,25 @@ function main() {
     for (const routeDefinition of slugRouteDefinitions) {
       const sourceAlias = toAliasPath(routeDefinition.source);
 
-      for (const slug of routeDefinition.getSlugs()) {
-        const outputPath = path.join(localeRoot, routeDefinition.targetBase, slug, "page.tsx");
-        const paramsLiteral = JSON.stringify({ slug });
+      for (const entry of routeDefinition.getEntries(locale)) {
+        const routeSegments = getRouteSegments(
+          entry,
+          routeDefinition.targetBase,
+          locale,
+        );
+        const outputPath = path.join(
+          localeRoot,
+          routeDefinition.targetBase,
+          ...routeSegments,
+          "page.tsx",
+        );
+        const paramsLiteral = JSON.stringify({ slug: entry.slug });
 
+        registerOutput(
+          writtenOutputs,
+          outputPath,
+          `${routeDefinition.targetBase}/${routeSegments.join("/")}`,
+        );
         ensureDirectory(outputPath);
         fs.writeFileSync(
           outputPath,
